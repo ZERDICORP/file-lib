@@ -13,31 +13,33 @@
 #ifndef ZER__FILE_MODEL
 	#define ZER__FILE_MODEL
 	#define mWARNING(sMessage) (std::cerr << "[warning]: " << sMessage << ".." << std::endl)
-		namespace zer
+
+	namespace zer
+	{
+		namespace file
 		{
-			namespace file
+			struct Info
 			{
-				struct Info
-				{
-					std::string sPath;
-					std::string sFullName;
-					std::string sName;
-					std::string sFormat;
+				std::string sPath;
+				std::string sFullName;
+				std::string sName;
+				std::string sFormat;
 
-					int iLength;
-				};
-
-				struct Modifier
-				{
-					const static int standard = 0;
-					const static int lines = 1;
-					const static int binary = 2;
-					const static int hidden = 3;
-				};
+				int iLength;
 			};
 
-			class File
+			struct Modifier
 			{
+				const static int standard = 0;
+				const static int lines = 1;
+				const static int binary = 2;
+				const static int hidden = 3;
+			};
+		};
+
+		class File
+		{
+			private:
 				private:
 					std::fstream _fs;
 
@@ -93,7 +95,7 @@
 					std::string const& lineAt(int iIndex) {return this -> _rLines[iIndex];}
 
 					file::Info info() {return file::Info{this -> _sPath, this -> _sFullName, this -> _sName, this -> _sFormat, this -> _iLength};}
-			};
-			#include "file.inl"
 		};
+		#include "file.inl"
+	};
 #endif
