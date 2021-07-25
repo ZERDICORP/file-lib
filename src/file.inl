@@ -108,10 +108,10 @@ void File::_readLines()
 {
 	std::string sLine;
 	while (std::getline(this -> _fs, sLine))
-		this -> _rLines.push_back(sLine);
+		this -> lines.push_back(sLine);
 
-	for (int i = 0; i < this -> _rLines.size(); ++i)
-		this -> _sData += this -> _rLines[i] + (i < this -> _rLines.size() - 1 ? "\n" : "");
+	for (int i = 0; i < this -> lines.size(); ++i)
+		this -> _sData += this -> lines[i] + (i < this -> lines.size() - 1 ? "\n" : "");
 }
 
 void File::setSliceSize(int iSliceSize)

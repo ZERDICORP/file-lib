@@ -56,7 +56,7 @@
 					std::string _sFormat;
 					std::string _sData;
 
-					std::vector<std::string> _rLines;
+					std::vector<std::string> lines;
 
 					inline bool _bHasModifier(std::initializer_list<int> modifiers, int iDesiredModifier);
 					inline bool _doesExists(std::string sFilePath);
@@ -74,7 +74,7 @@
 
 					void close() {this -> _fs.close();}
 
-					int linesLen() {return this -> _rLines.size();}
+					int linesLen() {return this -> lines.size();}
 					int const& len() {return this -> _iLength;}
 					int const& slicesLen() {return this -> _iSlicesLen;}
 
@@ -92,7 +92,7 @@
 					inline void disableWarnings() {this -> _bWarnings = false;}
 
 					std::string const& data() {return this -> _sData;}
-					std::string const& lineAt(int iIndex) {return this -> _rLines[iIndex];}
+					std::string const& lineAt(int iIndex) {return this -> lines[iIndex];}
 
 					file::Info info() {return file::Info{this -> _sPath, this -> _sFullName, this -> _sName, this -> _sFormat, this -> _iLength};}
 		};
