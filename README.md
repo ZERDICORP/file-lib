@@ -2,7 +2,7 @@
 
 ### Minimum usage:
 ```cpp
-zer::File file("./text.txt");
+zer::File file("text.txt");
 
 /*
     Read.
