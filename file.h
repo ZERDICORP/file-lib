@@ -4,12 +4,11 @@
 #include <sys/stat.h>
 #include <sstream>
 #include <streambuf>
-#include <vector>
 #include <iterator>
 #include <windows.h>
 #include <cmath>
-#include <row.h>
-#include <str.h>
+#include <vector>
+#include <athm.h>
 
 #ifndef ZER__FILE_MODEL
 	#define ZER__FILE_MODEL
@@ -42,9 +41,8 @@
 				private:
 					std::fstream _fs;
 
+					bool _bWarnings = true;
 					bool _bDoesExists;
-					inline bool _bHasModifier(std::initializer_list<int> modifiers, int iDesiredModifier);
-					inline bool _doesExists(std::string sFilePath);
 
 					int _iSliceSize = 0;
 					int _iLength = 0;
@@ -56,7 +54,10 @@
 					std::string _sFormat;
 					std::string _sData;
 
-					zer::row<std::string> _rLines;
+					std::vector<std::string> _rLines;
+
+					inline bool _bHasModifier(std::initializer_list<int> modifiers, int iDesiredModifier);
+					inline bool _doesExists(std::string sFilePath);
 
 					inline void _setFilePath(std::string sFilePath);
 					inline void _write(std::string sData);
@@ -71,7 +72,7 @@
 
 					void close() {this -> _fs.close();}
 
-					int linesLen() {return this -> _rLines.len();}
+					int linesLen() {return this -> _rLines.size();}
 					int const& len() {return this -> _iLength;}
 					int const& slicesLen() {return this -> _iSlicesLen;}
 
@@ -86,9 +87,10 @@
 					inline void read(std::initializer_list<int> modifiers = {file::Modifier::standard});
 					inline void setSliceSize(int iSliceSize);
 					inline void slice(int iSliceIndex, std::initializer_list<int> modifiers);
+					inline void disableWarnings() {this -> _bWarnings = false;}
 
 					std::string const& data() {return this -> _sData;}
-					std::string const& line(int iIndex) {return this -> _rLines[iIndex];}
+					std::string const& lineAt(int iIndex) {return this -> _rLines[iIndex];}
 
 					file::Info info() {return file::Info{this -> _sPath, this -> _sFullName, this -> _sName, this -> _sFormat, this -> _iLength};}
 			};

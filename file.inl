@@ -4,13 +4,13 @@ void File::_setFilePath(std::string sFilePath)
 {
 	this -> _sPath = sFilePath;
 
-	zer::row<std::string> sPathParts = zer::str::split(zer::str::replace(this -> _sPath, "\\", "/"), "/");
-	this -> _sFullName = sPathParts[sPathParts.len() - 1];
+	std::vector<std::string> pathParts = zer::athm::split(zer::athm::replace(this -> _sPath, "\\", "/"), "/");
+	this -> _sFullName = pathParts[pathParts.size() - 1];
 
-	zer::row<std::string> sFileNameParts = zer::str::split(this -> _sFullName, ".");
+	std::vector<std::string> fileNameParts = zer::athm::split(this -> _sFullName, ".");
 	
-	this -> _sName = sFileNameParts[0];
-	this -> _sFormat = sFileNameParts[1];
+	this -> _sName = fileNameParts[0];
+	this -> _sFormat = fileNameParts[1];
 }
 
 void File::open(std::string sFilePath)
@@ -18,10 +18,12 @@ void File::open(std::string sFilePath)
 	this -> _setFilePath(sFilePath);
 	this -> _bDoesExists = this -> _doesExists(sFilePath);
 	
-	if (!this -> _bDoesExists)
-		mWARNING("file \"" << this -> _sPath << "\" does not exists");
+	if (!this -> _bDoesExists && this -> _bWarnings)
+			mWARNING("file \"" << this -> _sPath << "\" does not exists");
 	else
+	{
 		this -> _iLength = std::ifstream(this -> _sPath, std::ifstream::ate).tellg();
+	}
 }
 
 bool File::_bHasModifier(std::initializer_list<int> modifiers, int iDesiredModifier)
@@ -106,10 +108,10 @@ void File::_readLines()
 {
 	std::string sLine;
 	while (std::getline(this -> _fs, sLine))
-		this -> _rLines.end(sLine);
+		this -> _rLines.push_back(sLine);
 
-	for (int i = 0; i < this -> _rLines.len(); ++i)
-		this -> _sData += this -> _rLines[i] + (i < this -> _rLines.len() - 1 ? "\n" : "");
+	for (int i = 0; i < this -> _rLines.size(); ++i)
+		this -> _sData += this -> _rLines[i] + (i < this -> _rLines.size() - 1 ? "\n" : "");
 }
 
 void File::setSliceSize(int iSliceSize)
