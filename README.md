@@ -13,7 +13,7 @@ std::string sData = file.data();
 /*
     Write.
 */
-file.write();
+file.write("Hello, world!");
 ```
 
 ### Dependencies:
