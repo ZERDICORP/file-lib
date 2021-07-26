@@ -1,160 +1,118 @@
-// file.inl
-
-void File::_setFilePath(std::string sFilePath)
+File::File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers)
 {
-	this -> _sPath = sFilePath;
+	my._info.sPath = sFilePath;
 
-	std::vector<std::string> pathParts = zer::athm::split(zer::athm::replace(this -> _sPath, "\\", "/"), "/");
-	this -> _sFullName = pathParts[pathParts.size() - 1];
+	std::vector<std::string> pathParts = zer::athm::split(zer::athm::replace(my._info.sPath, "\\", "/"), "/");
+	my._info.sFullName = pathParts[pathParts.size() - 1];
 
-	std::vector<std::string> fileNameParts = zer::athm::split(this -> _sFullName, ".");
+	std::vector<std::string> fileNameParts = zer::athm::split(my._info.sFullName, ".");
 	
-	this -> _sName = fileNameParts[0];
-	this -> _sFormat = fileNameParts[1];
-}
+	my._info.sName = fileNameParts[0];
+	my._info.sFormat = fileNameParts[1];
 
-void File::open(std::string sFilePath)
-{
-	this -> _setFilePath(sFilePath);
-	this -> _bDoesExists = this -> _doesExists(sFilePath);
+	my.setMode(modifiers);
+
+	my._info.bExists = File::doesExists(sFilePath);
 	
-	if (!this -> _bDoesExists && this -> _bWarnings)
-			mWARNING("file \"" << this -> _sPath << "\" does not exists");
+	if (!my._info.bExists && my._bWarnings)
+		mWARNING("file \"" << my._info.sPath << "\" does not exists");
 	else
-	{
-		this -> _iLength = std::ifstream(this -> _sPath, std::ifstream::ate).tellg();
-	}
+		my._info.iLength = std::ifstream(my._info.sPath, std::ifstream::ate).tellg();
 }
 
-bool File::_bHasModifier(std::initializer_list<int> modifiers, int iDesiredModifier)
+void File::setMode(std::initializer_list<FILE_MODE> modifiers)
 {
-	for (int iModifier : modifiers)
-		if (iModifier == iDesiredModifier)
-			return true;
-	return false;
+	for (FILE_MODE modifier : modifiers)
+		my._modifiers.push_back(modifier);
 }
 
-bool File::_doesExists(std::string sFilePath)
+void File::makeHidden()
+{
+	LPCSTR fileLPCSTR = my._info.sPath.c_str();
+	DWORD dw = GetFileAttributes(fileLPCSTR);
+	if ((dw & FILE_ATTRIBUTE_HIDDEN) == 0)
+		SetFileAttributes(fileLPCSTR, dw | FILE_ATTRIBUTE_HIDDEN);
+}
+
+void File::write(std::string sData)
+{
+	if (zer::athm::vectorHas(my._modifiers, FILE_MODE::BINARY))
+		my._fs.open(my._info.sPath, std::fstream::out | std::ios::binary);
+	else
+		my._fs.open(my._info.sPath, std::fstream::out);
+
+	my._fs << sData;
+}
+
+std::string File::read()
+{
+	if (my._info.bExists)
+	{
+		if (zer::athm::vectorHas(my._modifiers, FILE_MODE::BINARY))
+			my._fs.open(my._info.sPath, std::fstream::in | std::ios::binary);
+		else
+			my._fs.open(my._info.sPath, std::fstream::in);
+
+		return std::string((std::istreambuf_iterator<char>(my._fs)), std::istreambuf_iterator<char>());
+	}
+	else
+		mWARNING("no open file found");
+
+	return "";
+}
+
+std::vector<std::string> File::readLines()
+{
+	std::vector<std::string> lines;
+
+	if (my._info.bExists)
+	{
+		std::string sLine;
+		while (std::getline(my._fs, sLine))
+			lines.push_back(sLine);
+	}
+	else
+		mWARNING("no open file found");
+
+	return lines;
+}
+
+std::string File::readSlice(int iStartPosition, int iSliceSize)
+{
+	std::string sData;
+
+	if (my._info.bExists)
+	{
+		if (zer::athm::vectorHas(my._modifiers, FILE_MODE::BINARY))
+			my._fs.open(my._info.sPath, std::ifstream::ate | std::fstream::in | std::ios::binary);
+		else
+			my._fs.open(my._info.sPath, std::ifstream::ate | std::fstream::in);
+		
+		if (iStartPosition >= 0 && iStartPosition + iSliceSize < my._info.iLength)
+		{
+			int iEndPosition = iStartPosition + iSliceSize;
+
+			if (iEndPosition > my._info.iLength)
+				iEndPosition -= iEndPosition - my._info.iLength;
+
+			int iTempSliceSize = iEndPosition - iStartPosition;
+			
+			sData.resize(iTempSliceSize);
+
+			my._fs.seekg(iStartPosition);
+			my._fs.read(&sData[0], iTempSliceSize);
+		}
+		else
+			mWARNING("index out of range");
+	}
+	else
+		mWARNING("no open file found");
+
+	return sData;
+}
+
+bool File::doesExists(std::string sFilePath)
 {
 	struct stat buffer;
 	return stat(sFilePath.c_str(), &buffer) == 0;
-}
-
-void File::write(std::string sData, std::string sFilePath, std::initializer_list<int> modifiers)
-{
-	this -> _setFilePath(sFilePath);
-	this -> write(sData, modifiers);
-}
-
-void File::write(std::string sData, std::initializer_list<int> modifiers)
-{
-	if (this -> _bHasModifier(modifiers, file::Modifier::binary))
-		this -> _fs.open(this -> _sPath, std::fstream::out | std::ios::binary);
-	else
-		this -> _fs.open(this -> _sPath, std::fstream::out);
-	
-	if (this -> _bHasModifier(modifiers, file::Modifier::hidden))
-	{
-		/*
-			Make the file hidden.
-		*/
-		LPCSTR fileLPCSTR = this -> _sPath.c_str();
-		DWORD dw = GetFileAttributes(fileLPCSTR);
-		if ((dw & FILE_ATTRIBUTE_HIDDEN) == 0)
-			SetFileAttributes(fileLPCSTR, dw | FILE_ATTRIBUTE_HIDDEN);
-	}
-
-	this -> _write(sData);
-}
-
-void File::_write(std::string sData)
-{
-	this -> _fs << sData;
-	this -> _sData = sData;
-	this -> _bDoesExists = true;
-}
-
-void File::read(std::string sFilePath, std::initializer_list<int> modifiers)
-{
-	this -> open(sFilePath);
-	this -> read(modifiers);
-}
-
-void File::read(std::initializer_list<int> modifiers)
-{
-	if (this -> _bDoesExists)
-	{
-		if (this -> _bHasModifier(modifiers, file::Modifier::binary))
-			this -> _fs.open(this -> _sPath, std::fstream::in | std::ios::binary);
-		else
-			this -> _fs.open(this -> _sPath, std::fstream::in);
-
-		if (this -> _bHasModifier(modifiers, file::Modifier::lines))
-			this -> _readLines();
-		else
-			this -> _read();
-	}
-	else
-		mWARNING("no open file found");
-}
-
-void File::_read()
-{
-	std::string sData((std::istreambuf_iterator<char>(this -> _fs)), std::istreambuf_iterator<char>());
-	this -> _sData = sData;
-}
-
-void File::_readLines()
-{
-	std::string sLine;
-	while (std::getline(this -> _fs, sLine))
-		this -> _lines.push_back(sLine);
-
-	for (int i = 0; i < this -> _lines.size(); ++i)
-		this -> _sData += this -> _lines[i] + (i < this -> _lines.size() - 1 ? "\n" : "");
-}
-
-void File::setSliceSize(int iSliceSize)
-{
-	this -> _iSliceSize = iSliceSize;
-	if (this -> _bDoesExists)
-		this -> _iSlicesLen = std::ceil((float)this -> _iLength / this -> _iSliceSize);
-	else
-		mWARNING("can't set slice size, because file not open");
-}
-
-void File::slice(int iSliceIndex, std::initializer_list<int> modifiers)
-{
-	if (this -> _bDoesExists)
-	{
-		if (this -> _bHasModifier(modifiers, file::Modifier::binary))
-			this -> _fs.open(this -> _sPath, std::ifstream::ate | std::fstream::in | std::ios::binary);
-		else
-			this -> _fs.open(this -> _sPath, std::ifstream::ate | std::fstream::in);
-		this -> _slice(iSliceIndex);
-	}
-	else
-		mWARNING("no open file found");
-}
-
-void File::_slice(int iSliceIndex)
-{
-	if (iSliceIndex >= 0 && iSliceIndex < this -> _iSlicesLen)
-	{
-		int iStartPosition = iSliceIndex * this -> _iSliceSize;
-		int iEndPosition = iSliceIndex * this -> _iSliceSize + this -> _iSliceSize;
-
-		if (iEndPosition > this -> _iLength)
-			iEndPosition -= iEndPosition - this -> _iLength;
-
-		int iTempSliceSize = iEndPosition - iStartPosition;
-		
-		this -> _sData.resize(iTempSliceSize);
-
-		this -> _fs.seekg(iStartPosition);
-		this -> _fs.read(&this -> _sData[0], iTempSliceSize);
-	}
-	else
-		mWARNING("incorrect slice number: " << iSliceIndex << ", with total: " << this -> _iSlicesLen - 1 << 
-			" (count slices from zero: 0, 1, 2, etc.)");
 }

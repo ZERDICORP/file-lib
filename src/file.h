@@ -1,5 +1,3 @@
-// file.h
-
 #include <fstream>
 #include <sys/stat.h>
 #include <sstream>
@@ -16,87 +14,59 @@
 
 	namespace zer
 	{
-		namespace file
+		enum class FILE_MODE
 		{
-			struct Info
-			{
-				std::string sPath;
-				std::string sFullName;
-				std::string sName;
-				std::string sFormat;
+			STANDARD,
+			BINARY,
+		};
 
-				int iLength;
-			};
+		struct FileInfo
+		{
+			bool bExists;
 
-			struct Modifier
-			{
-				const static int standard = 0;
-				const static int lines = 1;
-				const static int binary = 2;
-				const static int hidden = 3;
-			};
+			int iLength;
+
+			std::string sPath;
+			std::string sFullName;
+			std::string sName;
+			std::string sFormat;
 		};
 
 		class File
 		{
 			private:
 				private:
+					File& my = *this;
+
 					std::fstream _fs;
 
+					FileInfo _info;
+
 					bool _bWarnings = true;
-					bool _bDoesExists;
 
-					int _iSliceSize = 0;
-					int _iLength = 0;
-					int _iSlicesLen = 0;
-
-					std::string _sPath;
-					std::string _sFullName;
-					std::string _sName;
-					std::string _sFormat;
-					std::string _sData;
-
-					std::vector<std::string> _lines;
-
-					inline bool _bHasModifier(std::initializer_list<int> modifiers, int iDesiredModifier);
-					inline bool _doesExists(std::string sFilePath);
-
-					inline void _setFilePath(std::string sFilePath);
-					inline void _write(std::string sData);
-					inline void _read();
-					inline void _readLines();
-					inline void _slice(int iSliceIndex);
+					std::vector<FILE_MODE> _modifiers;
 
 				public:
-					inline File() {}
-					inline File(std::string sFilePath) {this -> open(sFilePath);}
-					inline ~File() {if (this -> isOpen()) this -> _fs.close();}
+					inline File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers = {FILE_MODE::STANDARD});
+					inline ~File() {if (my.isOpen()) my._fs.close();}
 
-					int linesLen() {return this -> _lines.size();}
-					int const& len() {return this -> _iLength;}
-					int const& slicesLen() {return this -> _iSlicesLen;}
+					inline const FileInfo& info() {return my._info;}
 
-					bool doesExists() {return this -> _bDoesExists;}
-					bool isOpen() {return this -> _fs.is_open();}
-					bool doesExists(std::string sFilePath) {return this -> _doesExists(sFilePath);}
+					inline std::string read();
+					inline std::string readSlice(int iStartPosition, int iSliceSize);
 
-					void close() {this -> _fs.close();}
-					inline void open(std::string sFilePath);
-					inline void write(std::string sData, std::string sFilePath, std::initializer_list<int> modifiers = {file::Modifier::standard});
-					inline void write(std::string sData, std::initializer_list<int> modifiers = {file::Modifier::standard});
-					inline void read(std::string sFilePath, std::initializer_list<int> modifiers = {file::Modifier::standard});
-					inline void read(std::initializer_list<int> modifiers = {file::Modifier::standard});
-					inline void setSliceSize(int iSliceSize);
-					inline void slice(int iSliceIndex, std::initializer_list<int> modifiers);
-					inline void disableWarnings() {this -> _bWarnings = false;}
+					inline std::vector<std::string> readLines();
 
-					std::vector<std::string> lines() {return this -> _lines;}
+					inline void write(std::string sData);
+					inline void makeHidden();
+					inline void setMode(std::initializer_list<FILE_MODE> modifiers);
+					inline void close() {my._fs.close();}
+					inline void disableWarnings() {my._bWarnings = false;}
 
-					std::string const& data() {return this -> _sData;}
-					std::string const& lineAt(int iIndex) {return this -> _lines[iIndex];}
-
-					file::Info info() {return file::Info{this -> _sPath, this -> _sFullName, this -> _sName, this -> _sFormat, this -> _iLength};}
+					inline bool isOpen() {return my._fs.is_open();}
+					static inline bool doesExists(std::string sFilePath);
 		};
+
 		#include "file.inl"
 	};
 #endif
