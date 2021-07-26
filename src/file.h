@@ -80,7 +80,7 @@
 					bool isOpen() {return this -> _fs.is_open();}
 					bool doesExists(std::string sFilePath) {return this -> _doesExists(sFilePath);}
 
-					void close() {this -> _fs.close();}
+					inline void close() {this -> _fs.close();}
 					inline void open(std::string sFilePath);
 					inline void write(std::string sData, std::string sFilePath, std::initializer_list<int> modifiers = {file::Modifier::standard});
 					inline void write(std::string sData, std::initializer_list<int> modifiers = {file::Modifier::standard});
