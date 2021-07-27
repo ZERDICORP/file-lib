@@ -9,5 +9,5 @@ install:
   - cd .. ; cd ..
   - git clone https://github.com/ZERDICORP/athm-lib
 script:
-  - g++ ./runner.cpp -o ./runner.exe -I"./cxxtest/" -I"./athm-lib/" -I"../src/" -std=c++11 -std=c++14
+  - g++ ./runner.cpp -o ./runner.exe -I"./cxxtest/" -I"./athm-lib/src/" -I"../src/" -std=c++11 -std=c++14
   - ./runner.exe
