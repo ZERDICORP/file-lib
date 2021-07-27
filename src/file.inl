@@ -12,16 +12,99 @@ File::File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers)
 
 	my.setMode(modifiers);
 
-	my._info.bExists = File::doesExists(sFilePath);
-	
-	if (my._info.bExists)
-		my._info.iLength = std::ifstream(my._info.sPath, std::ifstream::ate).tellg();
+	my._update();
 }
 
-void File::setMode(std::initializer_list<FILE_MODE> modifiers)
+void File::_open(std::ios_base::openmode mode)
 {
-	for (FILE_MODE modifier : modifiers)
-		my._modifiers.push_back(modifier);
+	if (zer::athm::vectorHas(my._modifiers, FILE_MODE::BINARY))
+		my._fs.open(my._info.sPath, mode | std::ios::binary);
+	else
+		my._fs.open(my._info.sPath, mode);
+}
+
+void File::_update()
+{
+	my._info.bExists = File::doesExists(my._info.sPath);
+	my._info.iSize = File::getSize(my._info.sPath);
+}
+
+FileResult File::read()
+{
+	my._update();
+
+	std::string sData;
+
+	if (!my._info.bExists)
+		return FileResult(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+
+	my._open(std::fstream::in);
+	
+	sData = std::string((std::istreambuf_iterator<char>(my._fs)), std::istreambuf_iterator<char>());
+	
+	my._fs.close();
+
+	return FileResult(sData, FILE_RESULT_CODE::OK);
+}
+
+FileResult File::readLines()
+{
+	my._update();
+
+	std::vector<std::string> lines;
+
+	if (!my._info.bExists)
+		return FileResult(lines, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+
+	my._open(std::fstream::in);
+
+	std::string sLine;
+	while (std::getline(my._fs, sLine))
+		lines.push_back(sLine);
+
+	my._fs.close();
+
+	return FileResult(lines, FILE_RESULT_CODE::OK);
+}
+
+FileResult File::readSlice(int iStartPosition, int iSliceSize)
+{
+	my._update();
+
+	std::string sData;
+
+	if (!my._info.bExists)
+		return FileResult(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+
+	if (!(iStartPosition >= 0 && iStartPosition < my._info.iSize))
+		return FileResult(sData, FILE_RESULT_CODE::SLICE_STARTING_POSITION_IS_OUT_OF_RANGE);
+
+	if (iSliceSize <= 0)
+		return FileResult(sData, FILE_RESULT_CODE::INCORRECT_SLICE_SIZE);
+
+	my._open(std::fstream::in | std::ifstream::ate);
+
+	int iEndPosition = iStartPosition + iSliceSize;
+	if (iEndPosition > my._info.iSize)
+		iEndPosition -= iEndPosition - my._info.iSize;
+
+	iSliceSize = iEndPosition - iStartPosition;
+	
+	sData.resize(iSliceSize);
+
+	my._fs.seekg(iStartPosition);
+	my._fs.read(&sData[0], iSliceSize);
+	my._fs.close();
+
+	return FileResult(sData, FILE_RESULT_CODE::OK);
+}
+
+void File::write(std::string sData)
+{
+	my._open(std::fstream::out);
+	my._fs << sData;
+	my._fs.close();
+	my._update();
 }
 
 void File::toggleVisibility()
@@ -34,93 +117,10 @@ void File::toggleVisibility()
 		SetFileAttributes(fileLPCSTR, dw & ~FILE_ATTRIBUTE_HIDDEN);
 }
 
-void File::_open(std::ios_base::openmode mode)
+void File::setMode(std::initializer_list<FILE_MODE> modifiers)
 {
-	if (zer::athm::vectorHas(my._modifiers, FILE_MODE::BINARY))
-		my._fs.open(my._info.sPath, mode | std::ios::binary);
-	else
-		my._fs.open(my._info.sPath, mode);
-}
-
-void File::write(std::string sData)
-{
-	my._open(std::fstream::out);
-	
-	my._fs << sData;
-	
-	if (!my._info.bExists)
-	{
-		my._info.bExists = true;
-		my._info.iLength = std::ifstream(my._info.sPath, std::ifstream::ate).tellg();
-	}
-
-	my._fs.close();
-}
-
-FileResult File::read()
-{
-	std::string sData;
-
-	if (!my._info.bExists)
-		return FileResult(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND, "no open file found");
-
-	my._open(std::fstream::in);
-	
-	sData = std::string((std::istreambuf_iterator<char>(my._fs)), std::istreambuf_iterator<char>());
-	
-	my._fs.close();
-
-	return FileResult(sData);
-}
-
-FileResult File::readLines()
-{
-	std::vector<std::string> lines;
-
-	if (!my._info.bExists)
-		return FileResult(lines, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND, "no open file found");
-
-	my._open(std::fstream::in);
-
-	std::string sLine;
-	while (std::getline(my._fs, sLine))
-		lines.push_back(sLine);
-
-	my._fs.close();
-
-	return FileResult(lines);
-}
-
-FileResult File::readSlice(int iStartPosition, int iSliceSize)
-{
-	std::string sData;
-
-	if (!my._info.bExists)
-		return FileResult(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND, "no open file found");
-
-	if (!(iStartPosition >= 0 && iStartPosition < my._info.iLength))
-		return FileResult(sData, FILE_RESULT_CODE::SLICE_START_POSITION_OUT_OF_RANGE, "slice start position out of range");
-
-	if (iSliceSize <= 0)
-		return FileResult(sData, FILE_RESULT_CODE::INCORRECT_SLICE_SIZE, "incorrect slice size, should be > 0");
-
-	my._open(std::fstream::in | std::ifstream::ate);
-
-	int iEndPosition = iStartPosition + iSliceSize;
-
-	if (iEndPosition > my._info.iLength)
-		iEndPosition -= iEndPosition - my._info.iLength;
-
-	int iTempSliceSize = iEndPosition - iStartPosition;
-	
-	sData.resize(iTempSliceSize);
-
-	my._fs.seekg(iStartPosition);
-	my._fs.read(&sData[0], iTempSliceSize);
-
-	my._fs.close();
-
-	return FileResult(sData);
+	for (FILE_MODE modifier : modifiers)
+		my._modifiers.push_back(modifier);
 }
 
 bool File::doesExists(std::string sFilePath)

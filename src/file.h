@@ -17,7 +17,7 @@
 		{
 			OK,
 			NO_OPEN_FILE_FOUND,
-			SLICE_START_POSITION_OUT_OF_RANGE,
+			SLICE_STARTING_POSITION_IS_OUT_OF_RANGE,
 			INCORRECT_SLICE_SIZE
 		};
 
@@ -27,11 +27,18 @@
 			BINARY,
 		};
 
+		std::map<FILE_RESULT_CODE, std::string> resultMessages({
+			{FILE_RESULT_CODE::OK, "all is ok"},
+			{FILE_RESULT_CODE::NO_OPEN_FILE_FOUND, "no open file found"},
+			{FILE_RESULT_CODE::SLICE_STARTING_POSITION_IS_OUT_OF_RANGE, "slice starting position is out of range"},
+			{FILE_RESULT_CODE::INCORRECT_SLICE_SIZE, "incorrect slice size"},
+		});
+
 		struct FileInfo
 		{
 			bool bExists;
 
-			int iLength = -1;
+			int iSize;
 
 			std::string sPath;
 			std::string sFullName;
@@ -39,7 +46,7 @@
 			std::string sFormat;
 		};
 
-		class FileResult
+		struct FileResult
 		{
 			private:
 				FILE_RESULT_CODE _resultCode;
@@ -51,8 +58,8 @@
 
 			public:
 				FileResult() {}
-				FileResult(std::string sData, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK, std::string sMessage = "all is ok") : _sData(sData), _resultCode(resultCode), _sMessage(sMessage) {}
-				FileResult(std::vector<std::string> lines, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK, std::string sMessage = "all is ok") : _lines(lines), _resultCode(resultCode), _sMessage(sMessage) {}
+				FileResult(std::string sData, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK) : _sData(sData), _resultCode(resultCode), _sMessage(resultMessages[resultCode]) {}
+				FileResult(std::vector<std::string> lines, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK) : _lines(lines), _resultCode(resultCode), _sMessage(resultMessages[resultCode]) {}
 
 				const FILE_RESULT_CODE& code() {return this -> _resultCode;}
 				
@@ -74,6 +81,7 @@
 				std::vector<FILE_MODE> _modifiers;
 
 				inline void _open(std::ios_base::openmode mode);
+				inline void _update();
 
 			public:
 				inline File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers = {FILE_MODE::STANDARD});
@@ -91,7 +99,10 @@
 				inline void setMode(std::initializer_list<FILE_MODE> modifiers);
 
 				inline bool isOpen() {return my._fs.is_open();}
+
 				static inline bool doesExists(std::string sFilePath);
+
+				static inline int getSize(std::string sFilePath) {return std::ifstream(sFilePath, std::ifstream::ate).tellg();}
 		};
 
 		#include "file.inl"
