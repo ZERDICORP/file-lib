@@ -1,6 +1,7 @@
 # zer::file v1
 
-### [ATTENTION] This is an outdated version. See branch v2.
+# [ ATTENTION ]
+### This is an outdated version. See branch v2.
 
 ***
 
