@@ -1,4 +1,8 @@
-# zer::file `diff - !DEPRECATED!`
+# zer::file v1
+
+```diff
+- !DEPRECATED!
+```
 
 ### Minimum usage:
 ```cpp
