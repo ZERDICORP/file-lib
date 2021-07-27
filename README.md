@@ -1,4 +1,4 @@
-# zer::File
+# zer::File v2
 
 [![Build Status](https://travis-ci.com/ZERDICORP/file-lib.svg?branch=current)](https://travis-ci.com/ZERDICORP/file-lib)
 
