@@ -1,6 +1,4 @@
-# zer::file
-
-# ![](https://via.placeholder.com/15/f03c15/000000?text=+) `!DEPRECATED!`
+# zer::file ```diff - !DEPRECATED!```
 
 ### Minimum usage:
 ```cpp
