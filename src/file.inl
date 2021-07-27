@@ -107,15 +107,17 @@ void File::write(std::string sData)
 	my._update();
 }
 
-void File::toggleVisibility()
-{
-	LPCSTR fileLPCSTR = my._info.sPath.c_str();
-	DWORD dw = GetFileAttributes(fileLPCSTR);
-	if ((dw & FILE_ATTRIBUTE_HIDDEN) == 0)
-		SetFileAttributes(fileLPCSTR, dw | FILE_ATTRIBUTE_HIDDEN);
-	else
-		SetFileAttributes(fileLPCSTR, dw & ~FILE_ATTRIBUTE_HIDDEN);
-}
+#ifdef _WIN32
+	void File::toggleVisibility()
+	{
+		LPCSTR fileLPCSTR = my._info.sPath.c_str();
+		DWORD dw = GetFileAttributes(fileLPCSTR);
+		if ((dw & FILE_ATTRIBUTE_HIDDEN) == 0)
+			SetFileAttributes(fileLPCSTR, dw | FILE_ATTRIBUTE_HIDDEN);
+		else
+			SetFileAttributes(fileLPCSTR, dw & ~FILE_ATTRIBUTE_HIDDEN);
+	}
+#endif
 
 void File::setMode(std::initializer_list<FILE_MODE> modifiers)
 {

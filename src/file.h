@@ -110,7 +110,9 @@
 				inline FileResultLines readLines();
 
 				inline void write(std::string sData);
-				inline void toggleVisibility();
+				#ifdef _WIN32
+					inline void toggleVisibility();
+				#endif
 				inline void setMode(std::initializer_list<FILE_MODE> modifiers);
 
 				inline bool isOpen() {return my._fs.is_open();}
