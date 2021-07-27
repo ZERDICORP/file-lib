@@ -1,8 +1,8 @@
 # zer::file v1
 
-```diff
-- !DEPRECATED!
-```
+##### This is an outdated version. See branch **v2**.
+
+***
 
 ### Minimum usage:
 ```cpp
