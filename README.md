@@ -1,21 +1,8 @@
-# zer::File v2
+# zer::File
 
-[![Build Status](https://travis-ci.com/ZERDICORP/file-lib.svg?branch=current)](https://travis-ci.com/ZERDICORP/file-lib)
-
-### Minimum usage:
-```cpp
-zer::File file("text.txt");
-
-/*
-    Read.
-*/
-std::string sData = file.read().get();
-
-/*
-    Write.
-*/
-file.write("Hello, world!");
-```
+### Versions:
+- [v2](https://github.com/ZERDICORP/file-lib/tree/v2)
+- [v1](https://github.com/ZERDICORP/file-lib/tree/v1)
 
 ### Dependencies:
 - [athm.h](https://github.com/ZERDICORP/athm-lib.git)
