@@ -1,4 +1,4 @@
-# zer::file v1 (outdated)
+# zer::File v1 (outdated)
 
 ### ! This is an outdated version.
 ### ! See default branch to get [current version](https://github.com/ZERDICORP/file-lib).
