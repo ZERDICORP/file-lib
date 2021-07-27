@@ -1,6 +1,6 @@
 # zer::file v1
 
-##### This is an outdated version. See branch **v2**.
+#### ![](https://via.placeholder.com/15/FF0800/000000?text=+) This is an outdated version. See branch v2.
 
 ***
 
