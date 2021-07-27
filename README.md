@@ -16,6 +16,3 @@ std::string sData = file.read().get();
 */
 file.write("Hello, world!");
 ```
-
-### Dependencies:
-- [athm.h](https://github.com/ZERDICORP/athm-lib.git)
