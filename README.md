@@ -1,6 +1,6 @@
 # zer::file
 
-#### [](https://via.placeholder.com/15/f03c15/000000?text=+) `!DEPRECATED!`
+# ![](https://via.placeholder.com/15/f03c15/000000?text=+) `!DEPRECATED!`
 
 ### Minimum usage:
 ```cpp
