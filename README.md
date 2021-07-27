@@ -1,8 +1,8 @@
 # zer::File v1 (outdated)
 
-### :exclamation: This is an outdated version.
-### :exclamation: See default branch to get [current version](https://github.com/ZERDICORP/file-lib).
-### :exclamation: Use this version only if it is used in your project.
+### :exclamation: This is an outdated version :exclamation:
+### :exclamation: See [default home branch](https://github.com/ZERDICORP/file-lib) to get current version :exclamation:
+### :exclamation: Use this version only if it is used in your project :exclamation:
 
 ***
 
