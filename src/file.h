@@ -66,7 +66,7 @@
 					FileResult::_sMessage = fileResultMessages[resultCode];
 				}
 
-				inline std::string& data() {return this -> _sData;}
+				inline std::string& get() {return this -> _sData;}
 		};
 
 		class FileResultLines : public FileResult
@@ -81,7 +81,7 @@
 					FileResult::_sMessage = fileResultMessages[resultCode];
 				}
 
-				inline std::vector<std::string>& lines() {return this -> _lines;}
+				inline std::vector<std::string>& get() {return this -> _lines;}
 		};
 
 		class File
