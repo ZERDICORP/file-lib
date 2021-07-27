@@ -42,8 +42,6 @@
 		class FileResult
 		{
 			private:
-				FileResult& my = &this;
-
 				FILE_RESULT_CODE _resultCode;
 
 				std::string _sMessage;
@@ -55,46 +53,45 @@
 				FileResult() {}
 				FileResult(std::string sData, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK, std::string sMessage = "all is ok") : _sData(sData), _resultCode(resultCode), _sMessage(sMessage) {}
 				FileResult(std::vector<std::string> lines, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK, std::string sMessage = "all is ok") : _lines(lines), _resultCode(resultCode), _sMessage(sMessage) {}
-				
-				const FILE_RESULT_CODE& code() {return my._resultCode;}
-				
-				const std::string& message() {return my._sMessage;}
-				std::string& data() {return my._sData;}
 
-				std::vector<std::string>& lines() {return my._lines;}
+				const FILE_RESULT_CODE& code() {return this -> _resultCode;}
+				
+				const std::string& message() {return this -> _sMessage;}
+				std::string& data() {return this -> _sData;}
+
+				std::vector<std::string>& lines() {return this -> _lines;}
 		};
 
 		class File
 		{
 			private:
-				private:
-					File& my = *this;
+				File& my = *this;
 
-					std::fstream _fs;
+				std::fstream _fs;
 
-					FileInfo _info;
+				FileInfo _info;
 
-					std::vector<FILE_MODE> _modifiers;
+				std::vector<FILE_MODE> _modifiers;
 
-					inline void _open(std::ios_base::openmode mode);
+				inline void _open(std::ios_base::openmode mode);
 
-				public:
-					inline File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers = {FILE_MODE::STANDARD});
-					inline ~File() {if (my.isOpen()) my._fs.close();}
+			public:
+				inline File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers = {FILE_MODE::STANDARD});
+				inline ~File() {if (my.isOpen()) my._fs.close();}
 
-					inline const FileInfo& info() {return my._info;}
+				inline const FileInfo& info() {return my._info;}
 
-					FileResult read();
-					FileResult readSlice(int iStartPosition, int iSliceSize);
+				FileResult read();
+				FileResult readSlice(int iStartPosition, int iSliceSize);
 
-					FileResult readLines();
+				FileResult readLines();
 
-					inline void write(std::string sData);
-					inline void toggleVisibility();
-					inline void setMode(std::initializer_list<FILE_MODE> modifiers);
+				inline void write(std::string sData);
+				inline void toggleVisibility();
+				inline void setMode(std::initializer_list<FILE_MODE> modifiers);
 
-					inline bool isOpen() {return my._fs.is_open();}
-					static inline bool doesExists(std::string sFilePath);
+				inline bool isOpen() {return my._fs.is_open();}
+				static inline bool doesExists(std::string sFilePath);
 		};
 
 		#include "file.inl"
