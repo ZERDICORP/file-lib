@@ -1,5 +1,7 @@
 # zer::File
 
+[![Build Status](https://travis-ci.com/ZERDICORP/file-lib.svg?branch=current)](https://travis-ci.com/ZERDICORP/file-lib)
+
 ### Minimum usage:
 ```cpp
 zer::File file("text.txt");
