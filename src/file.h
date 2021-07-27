@@ -1,12 +1,5 @@
 #include <fstream>
-#include <sys/stat.h>
-#include <sstream>
-#include <streambuf>
-#include <iterator>
 #include <athm.h>
-#include <cmath>
-#include <vector>
-#include <windows.h>
 
 #ifndef ZER__FILE_MODEL
 	#define ZER__FILE_MODEL
@@ -24,7 +17,7 @@
 		enum class FILE_MODE
 		{
 			STANDARD,
-			BINARY,
+			BINARY
 		};
 
 		std::map<FILE_RESULT_CODE, std::string> resultMessages({
