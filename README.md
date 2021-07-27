@@ -1,4 +1,4 @@
-# zer::file
+# zer::File
 
 ### Minimum usage:
 ```cpp
