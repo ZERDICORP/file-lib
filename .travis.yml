@@ -6,7 +6,9 @@ install:
   - set -e
   - cd ./tests/cxxtest/bin
   - python ./cxxtestgen --error-printer -o ../../runner.cpp ../../tests.h
-  - cd .. ; cd ..
+  - cd ..
+  - git clone https://github.com/ZERDICORP/athm-lib
+  - cd ..
 script:
-  - g++ ./runner.cpp -o ./runner.exe -I"./cxxtest/" -I"../src/" -std=c++11 -std=c++14
+  - g++ ./runner.cpp -o ./runner.exe -I"./cxxtest/" -I"./athm-lib/" -I"../src/" -std=c++11 -std=c++14
   - ./runner.exe
