@@ -29,14 +29,14 @@ void File::_update()
 	my._info.iSize = File::getSize(my._info.sPath);
 }
 
-FileResult File::read()
+FileResultStandard File::read()
 {
 	my._update();
 
 	std::string sData;
 
 	if (!my._info.bExists)
-		return FileResult(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+		return FileResultStandard(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
 
 	my._open(std::fstream::in);
 	
@@ -44,43 +44,23 @@ FileResult File::read()
 	
 	my._fs.close();
 
-	return FileResult(sData, FILE_RESULT_CODE::OK);
+	return FileResultStandard(sData, FILE_RESULT_CODE::OK);
 }
 
-FileResult File::readLines()
-{
-	my._update();
-
-	std::vector<std::string> lines;
-
-	if (!my._info.bExists)
-		return FileResult(lines, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
-
-	my._open(std::fstream::in);
-
-	std::string sLine;
-	while (std::getline(my._fs, sLine))
-		lines.push_back(sLine);
-
-	my._fs.close();
-
-	return FileResult(lines, FILE_RESULT_CODE::OK);
-}
-
-FileResult File::readSlice(int iStartPosition, int iSliceSize)
+FileResultStandard File::readSlice(int iStartPosition, int iSliceSize)
 {
 	my._update();
 
 	std::string sData;
 
 	if (!my._info.bExists)
-		return FileResult(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+		return FileResultStandard(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
 
 	if (!(iStartPosition >= 0 && iStartPosition < my._info.iSize))
-		return FileResult(sData, FILE_RESULT_CODE::SLICE_STARTING_POSITION_IS_OUT_OF_RANGE);
+		return FileResultStandard(sData, FILE_RESULT_CODE::SLICE_STARTING_POSITION_IS_OUT_OF_RANGE);
 
 	if (iSliceSize <= 0)
-		return FileResult(sData, FILE_RESULT_CODE::INCORRECT_SLICE_SIZE);
+		return FileResultStandard(sData, FILE_RESULT_CODE::INCORRECT_SLICE_SIZE);
 
 	my._open(std::fstream::in | std::ifstream::ate);
 
@@ -96,7 +76,27 @@ FileResult File::readSlice(int iStartPosition, int iSliceSize)
 	my._fs.read(&sData[0], iSliceSize);
 	my._fs.close();
 
-	return FileResult(sData, FILE_RESULT_CODE::OK);
+	return FileResultStandard(sData, FILE_RESULT_CODE::OK);
+}
+
+FileResultLines File::readLines()
+{
+	my._update();
+
+	std::vector<std::string> lines;
+
+	if (!my._info.bExists)
+		return FileResultLines(lines, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+
+	my._open(std::fstream::in);
+
+	std::string sLine;
+	while (std::getline(my._fs, sLine))
+		lines.push_back(sLine);
+
+	my._fs.close();
+
+	return FileResultLines(lines, FILE_RESULT_CODE::OK);
 }
 
 void File::write(std::string sData)

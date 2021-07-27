@@ -20,7 +20,7 @@
 			BINARY
 		};
 
-		std::map<FILE_RESULT_CODE, std::string> resultMessages({
+		std::map<FILE_RESULT_CODE, std::string> fileResultMessages({
 			{FILE_RESULT_CODE::OK, "all is ok"},
 			{FILE_RESULT_CODE::NO_OPEN_FILE_FOUND, "no open file found"},
 			{FILE_RESULT_CODE::SLICE_STARTING_POSITION_IS_OUT_OF_RANGE, "slice starting position is out of range"},
@@ -39,27 +39,49 @@
 			std::string sFormat;
 		};
 
-		struct FileResult
+		class FileResult
 		{
-			private:
+			protected:
 				FILE_RESULT_CODE _resultCode;
 
 				std::string _sMessage;
+
+			public:
+				inline FileResult() {}
+
+				inline const FILE_RESULT_CODE& code() {return this -> _resultCode;}
+				
+				inline const std::string& message() {return this -> _sMessage;}
+		};
+
+		class FileResultStandard : public FileResult
+		{
+			private:
 				std::string _sData;
 
+			public:
+				inline FileResultStandard(std::string sData, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK) : _sData(sData)
+				{
+					FileResult::_resultCode = resultCode;
+					FileResult::_sMessage = fileResultMessages[resultCode];
+				}
+
+				inline std::string& data() {return this -> _sData;}
+		};
+
+		class FileResultLines : public FileResult
+		{
+			private:
 				std::vector<std::string> _lines;
 
 			public:
-				FileResult() {}
-				FileResult(std::string sData, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK) : _sData(sData), _resultCode(resultCode), _sMessage(resultMessages[resultCode]) {}
-				FileResult(std::vector<std::string> lines, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK) : _lines(lines), _resultCode(resultCode), _sMessage(resultMessages[resultCode]) {}
+				inline FileResultLines(std::vector<std::string> lines, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK) : _lines(lines)
+				{
+					FileResult::_resultCode = resultCode;
+					FileResult::_sMessage = fileResultMessages[resultCode];
+				}
 
-				const FILE_RESULT_CODE& code() {return this -> _resultCode;}
-				
-				const std::string& message() {return this -> _sMessage;}
-				std::string& data() {return this -> _sData;}
-
-				std::vector<std::string>& lines() {return this -> _lines;}
+				inline std::vector<std::string>& lines() {return this -> _lines;}
 		};
 
 		class File
@@ -82,10 +104,10 @@
 
 				inline const FileInfo& info() {return my._info;}
 
-				FileResult read();
-				FileResult readSlice(int iStartPosition, int iSliceSize);
+				inline FileResultStandard read();
+				inline FileResultStandard readSlice(int iStartPosition, int iSliceSize);
 
-				FileResult readLines();
+				inline FileResultLines readLines();
 
 				inline void write(std::string sData);
 				inline void toggleVisibility();
