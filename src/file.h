@@ -10,10 +10,17 @@
 
 #ifndef ZER__FILE_MODEL
 	#define ZER__FILE_MODEL
-	#define mWARNING(sMessage) (std::cerr << "[warning]: " << sMessage << ".." << std::endl)
 
 	namespace zer
 	{
+		enum class FILE_RESULT_CODE
+		{
+			OK,
+			NO_OPEN_FILE_FOUND,
+			SLICE_START_POSITION_OUT_OF_RANGE,
+			INCORRECT_SLICE_SIZE
+		};
+
 		enum class FILE_MODE
 		{
 			STANDARD,
@@ -24,12 +31,37 @@
 		{
 			bool bExists;
 
-			int iLength;
+			int iLength = -1;
 
 			std::string sPath;
 			std::string sFullName;
 			std::string sName;
 			std::string sFormat;
+		};
+
+		class FileResult
+		{
+			private:
+				FileResult& my = &this;
+
+				FILE_RESULT_CODE _resultCode;
+
+				std::string _sMessage;
+				std::string _sData;
+
+				std::vector<std::string> _lines;
+
+			public:
+				FileResult() {}
+				FileResult(std::string sData, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK, std::string sMessage = "all is ok") : _sData(sData), _resultCode(resultCode), _sMessage(sMessage) {}
+				FileResult(std::vector<std::string> lines, FILE_RESULT_CODE resultCode = FILE_RESULT_CODE::OK, std::string sMessage = "all is ok") : _lines(lines), _resultCode(resultCode), _sMessage(sMessage) {}
+				
+				const FILE_RESULT_CODE& code() {return my._resultCode;}
+				
+				const std::string& message() {return my._sMessage;}
+				std::string& data() {return my._sData;}
+
+				std::vector<std::string>& lines() {return my._lines;}
 		};
 
 		class File
@@ -42,9 +74,9 @@
 
 					FileInfo _info;
 
-					bool _bWarnings = true;
-
 					std::vector<FILE_MODE> _modifiers;
+
+					inline void _open(std::ios_base::openmode mode);
 
 				public:
 					inline File(std::string sFilePath, std::initializer_list<FILE_MODE> modifiers = {FILE_MODE::STANDARD});
@@ -52,16 +84,14 @@
 
 					inline const FileInfo& info() {return my._info;}
 
-					inline std::string read();
-					inline std::string readSlice(int iStartPosition, int iSliceSize);
+					FileResult read();
+					FileResult readSlice(int iStartPosition, int iSliceSize);
 
-					inline std::vector<std::string> readLines();
+					FileResult readLines();
 
 					inline void write(std::string sData);
-					inline void makeHidden();
+					inline void toggleVisibility();
 					inline void setMode(std::initializer_list<FILE_MODE> modifiers);
-					inline void close() {my._fs.close();}
-					inline void disableWarnings() {my._bWarnings = false;}
 
 					inline bool isOpen() {return my._fs.is_open();}
 					static inline bool doesExists(std::string sFilePath);
