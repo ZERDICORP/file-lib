@@ -5,4 +5,4 @@
 - :finnadie: [v1](https://github.com/ZERDICORP/file-lib/tree/v1)
 
 ### :couple_with_heart:  Dependencies:
-- [athm-lib](https://github.com/ZERDICORP/athm-lib.git)
+- [athm-lib](https://github.com/ZERDICORP/athm-lib/tree/v1) (v1)
