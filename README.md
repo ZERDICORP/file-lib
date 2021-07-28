@@ -18,12 +18,12 @@ std::string sData = file.read().get();
 file.write("Hello, world!");
 ```
 ## Contents  :clipboard:
-- (Examples)[#examples]
-	* (Read from file)[#read-from-file]
-	* (Write to file)[#write-to-file]
-	* (Get file information)[#get-file-information]
-	* (Reading and writing binary data)[#reading-and-writing-binary-data]
-- (Dependencies)[#dependencies]
+- [Examples](#examples)
+	* [Read from file](#read-from-file)
+	* [Write to file](#write-to-file)
+	* [Get file information](#get-file-information)
+	* [Reading and writing binary data](#reading-and-writing-binary-data)
+- [Dependencies](#dependencies)
 
 ## Examples  :information_desk_person:
 
