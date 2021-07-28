@@ -18,16 +18,16 @@ std::string sData = file.read().get();
 file.write("Hello, world!");
 ```
 ## Contents  :clipboard:
-- [Examples](#examples)
+- [Examples](#examplesinformation_desk_person)
 	* [Read from file](#read-from-file)
 	* [Write to file](#write-to-file)
 	* [Get file information](#get-file-information)
 	* [Reading and writing binary data](#reading-and-writing-binary-data)
-- [Dependencies](#dependencies)
+- [Dependencies](#dependenciescouple_with_heart)
 
 ## Examples  :information_desk_person:
 
-### 1) Read from file:
+### Read from file:
 _text.txt_
 ```
 Hello, world!
@@ -93,7 +93,7 @@ world!
 line [1]: Hello, world!
 line [2]: Cellar door!
 ```
-### 2) Write to file:
+### Write to file:
 _text.txt_
 ```
 Hello, world!
@@ -127,7 +127,7 @@ Hello, world!
 Cellar door!
 Beauty and the Beast!
 ```
-### 3) Get file information:
+### Get file information:
 _text.txt_
 ```
 Hello, world!
@@ -164,7 +164,7 @@ Full filename: text.txt
 File name: text
 File format: txt
 ```
-### 4) Reading and writing binary data:
+### Reading and writing binary data:
 _image.png_
 
 <img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
