@@ -1,9 +1,8 @@
-
 # zer::File v2 (current)
 
 [![Build Status](https://travis-ci.com/ZERDICORP/file-lib.svg?branch=current)](https://travis-ci.com/ZERDICORP/file-lib)
 
-## Minimum usage :older_man:
+## Minimum usage  :older_man:
 ```cpp
 zer::File file("text.txt");
 
@@ -21,12 +20,12 @@ file.write("Hello, world!");
 ## Examples  :information_desk_person:
 
 ### Read from file:
-___text.txt___
+_text.txt_
 ```
 Hello, world!
 Cellar door!
 ```
-___main.cpp___
+_main.cpp_
 ```cpp
 #include <iostream>
 #include "file.h"
@@ -89,12 +88,12 @@ line [1]: Hello, world!
 line [2]: Cellar door!
 ```
 ### Write to file:
-___text.txt___
+_text.txt_
 ```
 Hello, world!
 Cellar door!
 ```
-___main.cpp___
+_main.cpp_
 ```cpp
 #include <iostream>
 #include "file.h"
@@ -123,13 +122,13 @@ Cellar door!
 Beauty and the Beast!
 ```
 ### Get file information:
-___text.txt___
+_text.txt_
 ```
 Hello, world!
 Cellar door!
 Beauty and the Beast!
 ```
-___main.cpp___
+_main.cpp_
 ```cpp
 #include <iostream>
 #include "file.h"
@@ -160,11 +159,11 @@ File name: text
 File format: txt
 ```
 ### Reading and writing binary data:
-___image.png___
+_image.png_
 
 <img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
 
-___main.cpp___
+_main.cpp_
 ```cpp
 #include <iostream>
 #include "file.h"
@@ -179,7 +178,7 @@ int main()
 	return 0;
 }
 ```
-__image2.png__
+_image2.png_
 
 <img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
 
