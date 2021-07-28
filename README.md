@@ -1,8 +1,9 @@
+
 # zer::File v2 (current)
 
 [![Build Status](https://travis-ci.com/ZERDICORP/file-lib.svg?branch=current)](https://travis-ci.com/ZERDICORP/file-lib)
 
-## Minimum usage  :older_man:
+## Minimum usage  :older_man:
 ```cpp
 zer::File file("text.txt");
 
@@ -16,10 +17,17 @@ std::string sData = file.read().get();
 */
 file.write("Hello, world!");
 ```
+## Contents  :clipboard:
+- (Examples)[#examples]
+	* (Read from file)[#read-from-file]
+	* (Write to file)[#write-to-file]
+	* (Get file information)[#get-file-information]
+	* (Reading and writing binary data)[#reading-and-writing-binary-data]
+- (Dependencies)[#dependencies]
 
-## Examples  :information_desk_person:
+## Examples  :information_desk_person:
 
-### Read from file:
+### 1) Read from file:
 _text.txt_
 ```
 Hello, world!
@@ -48,10 +56,8 @@ int main()
 
 	/*
 		Reading a slice of file content.
-		7 - starting index,
-		5 - slice size
 	*/
-	auto readSliceResult = file.readSlice(7, 6);
+	auto readSliceResult = file.readSlice(7, 6); /* 7 - starting index, 5 - slice size */
 	if (!readSliceResult.ok())
 	{
 		std::cout << file.lastErrorMessage() << std::endl;
@@ -87,7 +93,7 @@ world!
 line [1]: Hello, world!
 line [2]: Cellar door!
 ```
-### Write to file:
+### 2) Write to file:
 _text.txt_
 ```
 Hello, world!
@@ -121,7 +127,7 @@ Hello, world!
 Cellar door!
 Beauty and the Beast!
 ```
-### Get file information:
+### 3) Get file information:
 _text.txt_
 ```
 Hello, world!
@@ -158,7 +164,7 @@ Full filename: text.txt
 File name: text
 File format: txt
 ```
-### Reading and writing binary data:
+### 4) Reading and writing binary data:
 _image.png_
 
 <img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
@@ -182,5 +188,5 @@ _image2.png_
 
 <img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
 
-## Dependencies  :couple_with_heart:
+## Dependencies  :couple_with_heart:
 - [athm-lib](https://github.com/ZERDICORP/athm-lib/tree/v1) (v1)
