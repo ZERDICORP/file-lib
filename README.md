@@ -1,5 +1,5 @@
-# :new_moon_with_face:  zer::File
+# zer::File  :new_moon_with_face:
 
-### :scroll:  Versions:
-        :godmode:  [v2](https://github.com/ZERDICORP/file-lib/tree/v2) (current)</br>
-        :finnadie:  [v1](https://github.com/ZERDICORP/file-lib/tree/v1)
+## Versions  :scroll::
+- [v2](https://github.com/ZERDICORP/file-lib/tree/v2) (current) :godmode: </br>
+- [v1](https://github.com/ZERDICORP/file-lib/tree/v1) :finnadie:
