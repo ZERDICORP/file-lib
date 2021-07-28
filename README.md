@@ -2,17 +2,186 @@
 
 [![Build Status](https://travis-ci.com/ZERDICORP/file-lib.svg?branch=current)](https://travis-ci.com/ZERDICORP/file-lib)
 
-### Minimum usage:
+## Contents:
+
+
+## Minimum usage  :older_man:
 ```cpp
 zer::File file("text.txt");
 
 /*
-    Read.
+	Read.
 */
 std::string sData = file.read().get();
 
 /*
-    Write.
+	Write.
 */
 file.write("Hello, world!");
 ```
+
+## Examples  :information_desk_person:
+
+### 1) Read from file:
+_text.txt_
+```
+Hello, world!
+Cellar door!
+```
+_main.cpp_
+```cpp
+#include <iostream>
+#include "file.h"
+
+int main()
+{
+	zer::File file("./text.txt");
+
+	/*
+		Reading the contents of a file.
+	*/
+	auto readResult = file.read();
+	if (!readResult.ok())
+	{
+		std::cout << file.lastErrorMessage() << std::endl;
+		return 1;
+	}
+
+	std::cout << readResult.get() << "\n\n";
+
+	/*
+		Reading a slice of file content.
+	*/
+	auto readSliceResult = file.readSlice(7, 6); /* 7 - starting index, 5 - slice size */
+	if (!readSliceResult.ok())
+	{
+		std::cout << file.lastErrorMessage() << std::endl;
+		return 1;
+	}
+
+	std::cout << readSliceResult.get() << "\n\n";
+
+	/*
+		Reading the contents of a file line by line.
+	*/
+	auto readLinesResult = file.readLines();
+	if (!readLinesResult.ok())
+	{
+		std::cout << file.lastErrorMessage() << std::endl;
+		return 1;
+	}
+
+	std::vector<std::string> lines = readLinesResult.get();
+	for (int i = 0; i < lines.size(); ++i)
+		std::cout << "line [" << i + 1 << "]: " << lines[i] << std::endl;
+
+	return 0;
+}
+```
+__Output__
+```
+Hello, world!
+Cellar door!
+
+world!
+
+line [1]: Hello, world!
+line [2]: Cellar door!
+```
+### 2) Write to file:
+_text.txt_
+```
+Hello, world!
+Cellar door!
+```
+_main.cpp_
+```cpp
+#include <iostream>
+#include "file.h"
+
+int main()
+{
+	zer::File file("./text.txt");
+
+	std::string sFileContents = file.read().get();
+	std::cout << sFileContents << "\n\n";
+
+	file.write(sFileContents + "\nBeauty and the Beast!");
+
+	std::cout << file.read().get() << std::endl;
+
+	return 0;
+}
+```
+__Output__
+```
+Hello, world!
+Cellar door!
+
+Hello, world!
+Cellar door!
+Beauty and the Beast!
+```
+### 3) Get file information:
+_text.txt_
+```
+Hello, world!
+Cellar door!
+Beauty and the Beast!
+```
+_main.cpp_
+```cpp
+#include <iostream>
+#include "file.h"
+
+int main()
+{
+	zer::File file("./text.txt");
+
+	zer::FileInfo info = file.info();
+
+	std::cout << "File \"" << info.sPath << "\" " << (info.bExists ? "does exists" : "does not exist") << std::endl;
+	std::cout << "File size: " << info.iSize << std::endl;
+	std::cout << "File path: " << info.sPath << std::endl;
+	std::cout << "Full filename: " << info.sFullName << std::endl;
+	std::cout << "File name: " << info.sName << std::endl;
+	std::cout << "File format: " << info.sFormat << std::endl;
+
+	return 0;
+}
+```
+__Output__
+```
+File "./text.txt" does exists
+File size: 50
+File path: ./text.txt
+Full filename: text.txt
+File name: text
+File format: txt
+```
+### 4) Reading and writing binary data:
+_image.png_
+
+<img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
+
+_main.cpp_
+```cpp
+#include <iostream>
+#include "file.h"
+
+int main()
+{
+	zer::File file("./image.png", {zer::FILE_MODE::BINARY});
+	zer::File file2("./image2.png", {zer::FILE_MODE::BINARY});
+
+	file2.write(file.read().get());
+
+	return 0;
+}
+```
+_image2.png_
+
+<img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/>
+
+## Dependencies  :couple_with_heart:
+- [athm-lib](https://github.com/ZERDICORP/athm-lib/tree/v1) (v1)

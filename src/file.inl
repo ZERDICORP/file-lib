@@ -36,7 +36,10 @@ FileResultStandard File::read()
 	std::string sData;
 
 	if (!my._info.bExists)
+	{
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::NO_OPEN_FILE_FOUND];
 		return FileResultStandard(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+	}
 
 	my._open(std::fstream::in);
 	
@@ -47,32 +50,41 @@ FileResultStandard File::read()
 	return FileResultStandard(sData, FILE_RESULT_CODE::OK);
 }
 
-FileResultStandard File::readSlice(int iStartPosition, int iSliceSize)
+FileResultStandard File::readSlice(int iStartIndex, int iSliceSize)
 {
 	my._update();
 
 	std::string sData;
 
 	if (!my._info.bExists)
+	{
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::NO_OPEN_FILE_FOUND];
 		return FileResultStandard(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+	}
 
-	if (!(iStartPosition >= 0 && iStartPosition < my._info.iSize))
-		return FileResultStandard(sData, FILE_RESULT_CODE::SLICE_STARTING_POSITION_IS_OUT_OF_RANGE);
+	if (!(iStartIndex >= 0 && iStartIndex < my._info.iSize))
+	{
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::SLICE_STARTING_INDEX_IS_OUT_OF_RANGE];
+		return FileResultStandard(sData, FILE_RESULT_CODE::SLICE_STARTING_INDEX_IS_OUT_OF_RANGE);
+	}
 
 	if (iSliceSize <= 0)
+	{
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::INCORRECT_SLICE_SIZE];
 		return FileResultStandard(sData, FILE_RESULT_CODE::INCORRECT_SLICE_SIZE);
+	}
 
 	my._open(std::fstream::in | std::ifstream::ate);
 
-	int iEndPosition = iStartPosition + iSliceSize;
+	int iEndPosition = iStartIndex + iSliceSize;
 	if (iEndPosition > my._info.iSize)
 		iEndPosition -= iEndPosition - my._info.iSize;
 
-	iSliceSize = iEndPosition - iStartPosition;
+	iSliceSize = iEndPosition - iStartIndex;
 	
 	sData.resize(iSliceSize);
 
-	my._fs.seekg(iStartPosition);
+	my._fs.seekg(iStartIndex);
 	my._fs.read(&sData[0], iSliceSize);
 	my._fs.close();
 
@@ -86,7 +98,10 @@ FileResultLines File::readLines()
 	std::vector<std::string> lines;
 
 	if (!my._info.bExists)
+	{
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::NO_OPEN_FILE_FOUND];
 		return FileResultLines(lines, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+	}
 
 	my._open(std::fstream::in);
 
