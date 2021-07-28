@@ -9,7 +9,7 @@
 		enum class FILE_RESULT_CODE
 		{
 			OK,
-			NO_OPEN_FILE_FOUND,
+			FILE_DOES_NOT_EXISTS,
 			SLICE_STARTING_INDEX_IS_OUT_OF_RANGE,
 			INCORRECT_SLICE_SIZE
 		};
@@ -22,7 +22,7 @@
 
 		std::map<FILE_RESULT_CODE, std::string> fileResultMessages({
 			{FILE_RESULT_CODE::OK, "all is ok"},
-			{FILE_RESULT_CODE::NO_OPEN_FILE_FOUND, "no open file found"},
+			{FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS, "file does not exists"},
 			{FILE_RESULT_CODE::SLICE_STARTING_INDEX_IS_OUT_OF_RANGE, "slice starting index is out of range"},
 			{FILE_RESULT_CODE::INCORRECT_SLICE_SIZE, "incorrect slice size"},
 		});

@@ -37,8 +37,8 @@ FileResultStandard File::read()
 
 	if (!my._info.bExists)
 	{
-		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::NO_OPEN_FILE_FOUND];
-		return FileResultStandard(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS];
+		return FileResultStandard(sData, FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS);
 	}
 
 	my._open(std::fstream::in);
@@ -58,8 +58,8 @@ FileResultStandard File::readSlice(int iStartIndex, int iSliceSize)
 
 	if (!my._info.bExists)
 	{
-		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::NO_OPEN_FILE_FOUND];
-		return FileResultStandard(sData, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS];
+		return FileResultStandard(sData, FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS);
 	}
 
 	if (!(iStartIndex >= 0 && iStartIndex < my._info.iSize))
@@ -99,8 +99,8 @@ FileResultLines File::readLines()
 
 	if (!my._info.bExists)
 	{
-		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::NO_OPEN_FILE_FOUND];
-		return FileResultLines(lines, FILE_RESULT_CODE::NO_OPEN_FILE_FOUND);
+		this -> _sLastErrorMessage = fileResultMessages[FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS];
+		return FileResultLines(lines, FILE_RESULT_CODE::FILE_DOES_NOT_EXISTS);
 	}
 
 	my._open(std::fstream::in);
