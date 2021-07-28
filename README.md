@@ -145,7 +145,7 @@ int main()
 
 	zer::FileInfo info = file.info();
 
-	std::cout << "File \"" << info.sPath << "\" " << (info.bExists ? "does exists" : "does not exist") << std::endl;
+	std::cout << "File \"" << info.sPath << "\" " << (info.bExists ? "does" : "does not") << " exists" << std::endl;
 	std::cout << "File size: " << info.iSize << std::endl;
 	std::cout << "File path: " << info.sPath << std::endl;
 	std::cout << "Full filename: " << info.sFullName << std::endl;
