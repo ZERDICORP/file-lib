@@ -108,7 +108,15 @@ int main()
 {
 	zer::File file("./text.txt");
 
-	std::string sFileContents = file.read().get();
+	auto result = file.read();
+	if (!result.ok())
+	{
+		std::cout << file.lastErrorMessage() << std::endl;
+		return 1;
+	}
+
+	std::string sFileContents = result.get();
+
 	std::cout << sFileContents << "\n\n";
 
 	file.write(sFileContents + "\nBeauty and the Beast!");
@@ -177,9 +185,16 @@ _main.cpp_
 int main()
 {
 	zer::File file("./image.png", {zer::FILE_MODE::BINARY});
-	zer::File file2("./image2.png", {zer::FILE_MODE::BINARY});
 
-	file2.write(file.read().get());
+	auto result = file.read();
+	if (!result.ok())
+	{
+		std::cout << file.lastErrorMessage() << std::endl;
+		return 1;
+	}
+
+	zer::File file2("./image2.png", {zer::FILE_MODE::BINARY});
+	file2.write(result.get());
 
 	return 0;
 }
