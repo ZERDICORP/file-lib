@@ -57,7 +57,7 @@ int main()
 	/*
 		Reading a slice of file content.
 	*/
-	auto readSliceResult = file.readSlice(7, 6); /* 7 - starting index, 5 - slice size */
+	auto readSliceResult = file.readSlice(7, 6); /* 7 - starting index, 6 - slice size */
 	if (!readSliceResult.ok())
 	{
 		std::cout << file.lastErrorMessage() << std::endl;
