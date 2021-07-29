@@ -5,7 +5,7 @@
 
 ## Minimum usage  :older_man:
 ```cpp
-zer::File file("text.txt");
+zer::File file("./text.txt");
 
 /*
 	Read.
