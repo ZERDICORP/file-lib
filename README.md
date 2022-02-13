@@ -175,7 +175,7 @@ File format: txt
 ### Reading and writing binary data:
 _image.png_
 
-<kbd><img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/></kbd>
+<kbd><img src="https://80.249.146.66:81/images/heart.png" alt="image" width="100"/></kbd>
 
 _main.cpp_
 ```cpp
@@ -201,7 +201,7 @@ int main()
 ```
 _image2.png_
 
-<kbd><img src="https://zerdicorp.ru/db/images/image.png" alt="image" width="100"/></kbd>
+<kbd><img src="http://80.249.146.66:81/images/heart.png" alt="image" width="100"/></kbd>
 
 ## Dependencies  :couple_with_heart:
 - [athm-lib](https://github.com/ZERDICORP/athm-lib/tree/v1) (v1)
