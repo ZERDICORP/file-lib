@@ -175,7 +175,7 @@ File format: txt
 ### Reading and writing binary data:
 _image.png_
 
-<kbd><img src="https://80.249.146.66:81/images/heart.png" alt="image" width="100"/></kbd>
+<kbd><img src="http://80.249.146.66:81/images/heart.png" alt="image" width="100"/></kbd>
 
 _main.cpp_
 ```cpp
